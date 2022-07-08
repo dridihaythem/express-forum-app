@@ -1,4 +1,5 @@
 const jwt = require('jsonwebtoken');
+const crypto = require('crypto');
 const User = require('./../models/userModel');
 const catchAsync = require('./../utils/catchAsync');
 const AppError = require('./../utils/AppError');
@@ -72,4 +73,27 @@ exports.forgetPassword = catchAsync(async (req, res, next) => {
 			await user.save({ validateBeforeSave: false });
 			return next(new AppError('Error sending email', 500));
 		});
+});
+
+exports.resetPassword = catchAsync(async (req, res, next) => {
+	const hashedToken = crypto.createHash('sha256').update(req.params.token).digest('hex');
+
+	const user = await User.findOne({ passwordResetToken: hashedToken, passwordResetExpires: { $gte: Date.now() } });
+
+	if (!user) {
+		return next(new AppError('Token is invalid or has expired', 400));
+	}
+
+	const { password, passwordConfirmation } = req.body;
+
+	user.password = password;
+	user.passwordConfirmation = passwordConfirmation;
+	user.passwordResetToken = undefined;
+	user.passwordResetExpires = undefined;
+
+	await user.save();
+
+	const { password: _password, ...others } = user._doc;
+
+	createAndSendToken(others, 200, res);
 });
