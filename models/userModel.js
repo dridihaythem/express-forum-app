@@ -29,6 +29,20 @@ const userSchema = mongoose.Schema({
 		lowercase: true,
 		validate: [validator.isEmail, 'Please enter a valid email'],
 	},
+	role: {
+		type: String,
+		enum: ['user', 'moderator', 'admin'],
+		default: 'user',
+	},
+	banned: {
+		type: Boolean,
+		default: false,
+	},
+	// account is active / disabled
+	disabled: {
+		type: Boolean,
+		default: false,
+	},
 	password: {
 		type: String,
 		required: [true, 'Password is required'],
