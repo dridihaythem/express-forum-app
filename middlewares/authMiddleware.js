@@ -39,3 +39,10 @@ exports.restrictTo =
 		}
 		next();
 	};
+
+exports.notBanned = (req, res, next) => {
+	if (req.user.banned) {
+		return next(new AppError('Your account has been banned', 403));
+	}
+	next();
+};
