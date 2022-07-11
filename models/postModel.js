@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const slugify = require('slugify');
 
 const postSchema = mongoose.Schema({
 	userId: {
@@ -28,6 +29,12 @@ const postSchema = mongoose.Schema({
 	publishedAt: {
 		type: Date,
 	},
+});
+
+// Create slug when create a new post
+postSchema.pre('save', function (next) {
+	this.slug = slugify(this.title);
+	next();
 });
 
 const Post = mongoose.model('Post', postSchema);
