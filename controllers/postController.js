@@ -40,7 +40,18 @@ exports.getPost = catchAsync(async (req, res, next) => {
 
 exports.getAllPosts = catchAsync(async (req, res, next) => {
 	const posts = await Post.find({ published: true })
-		.select('slug title conten user')
+		.select('slug title content user')
+		.populate({ path: 'user', select: 'first_name last_name' });
+
+	res.status(200).json({
+		status: 'success',
+		data: posts,
+	});
+});
+
+exports.unpublishedPosts = catchAsync(async (req, res, next) => {
+	const posts = await Post.find({ published: false })
+		.select('slug title content user')
 		.populate({ path: 'user', select: 'first_name last_name' });
 
 	res.status(200).json({
