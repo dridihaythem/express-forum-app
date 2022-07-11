@@ -22,6 +22,10 @@ exports.auth = catchAsync(async (req, res, next) => {
 		return next(new AppError('unauthorized', 401));
 	}
 
+	if (user.disabled) {
+		return next(new AppError('Your account has been disabled', 401));
+	}
+
 	req.user = user;
 
 	next();

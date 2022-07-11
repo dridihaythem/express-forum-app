@@ -10,7 +10,7 @@ const createAndSendToken = (user, statusCode, res) => {
 	res.status(statusCode).json({
 		status: 'success',
 		token: token,
-		data: { user },
+		data: user,
 	});
 };
 
@@ -32,6 +32,10 @@ exports.login = catchAsync(async (req, res, next) => {
 
 	if (!user || !(await user.checkPassword(password, user.password))) {
 		return next(new AppError('Incorrect email or password', 401));
+	}
+
+	if (user.disabled) {
+		return next(new AppError('Your account has been disabled', 401));
 	}
 
 	const { password: _password, ...others } = user._doc;
