@@ -61,6 +61,10 @@ const userSchema = mongoose.Schema({
 			message: 'Passwords do not match',
 		},
 	},
+	createdAt: {
+		type: Date,
+		default: Date.now(),
+	},
 	passwordResetToken: String,
 	passwordResetExpires: Date,
 });
