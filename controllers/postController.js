@@ -33,8 +33,7 @@ exports.getPost = catchAsync(async (req, res, next) => {
 
 exports.getAllPosts = catchAsync(async (req, res, next) => {
 	const posts = await Post.find({ published: true })
-		.select('slug title content')
-		.select('slug title content user')
+		.select('slug title conten user')
 		.populate({ path: 'user', select: 'first_name last_name' });
 
 	res.status(200).json({
