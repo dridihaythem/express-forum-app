@@ -9,6 +9,13 @@ exports.createPost = catchAsync(async (req, res, next) => {
 		user: req.user._id,
 	};
 
+	// posts from users with roles "admin" , "moderator" must be approved immediately
+
+	if (['admin', 'moderator'].includes(req.user.role)) {
+		data.published = true;
+		data.publishedAt = Date.now();
+	}
+
 	const post = await Post.create(data);
 
 	res.status(201).json({
