@@ -6,7 +6,7 @@ exports.createPost = catchAsync(async (req, res, next) => {
 	const data = {
 		title: req.body.title,
 		content: req.body.content,
-		userId: req.user.id,
+		user: req.user._id,
 	};
 
 	const post = await Post.create(data);
@@ -19,8 +19,8 @@ exports.createPost = catchAsync(async (req, res, next) => {
 
 exports.getPost = catchAsync(async (req, res, next) => {
 	const post = await Post.findOne({ _id: req.params.id, published: true })
-		.select('slug title content')
-		.populate({ path: 'userId', select: 'first_name last_name' });
+		.select('slug title content user')
+		.populate({ path: 'user', select: 'first_name last_name' });
 
 	if (!post) {
 		return next(new AppError('Post not found', 404));
@@ -34,8 +34,9 @@ exports.getPost = catchAsync(async (req, res, next) => {
 exports.getAllPosts = catchAsync(async (req, res, next) => {
 	const posts = await Post.find({ published: true })
 		.select('slug title content')
-		.populate({ path: 'userId', select: 'first_name last_name' });
-	console.log(posts);
+		.select('slug title content user')
+		.populate({ path: 'user', select: 'first_name last_name' });
+
 	res.status(200).json({
 		status: 'success',
 		data: posts,
