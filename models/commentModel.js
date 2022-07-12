@@ -15,6 +15,15 @@ const commentSchema = mongoose.Schema({
 		type: String,
 		required: [true, 'Comment is required'],
 	},
+	publishedAt: {
+		type: Date,
+		default: Date.now(),
+	},
+});
+
+commentSchema.pre(/^find/, function (next) {
+	this.populate({ path: 'user', select: 'first_name last_name' });
+	next();
 });
 
 const Comment = mongoose.model('Comment', commentSchema);
