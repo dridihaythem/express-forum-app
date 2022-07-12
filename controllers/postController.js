@@ -88,3 +88,14 @@ exports.deletePost = catchAsync(async (req, res, next) => {
 		data: null,
 	});
 });
+
+exports.updatePost = catchAsync(async (req, res, next) => {
+	const { title, content } = req.body; // we can only update title and content
+
+	const post = await Post.findByIdAndUpdate(req.params.id, { title, content }, { new: true, runValidators: true });
+
+	res.status(200).json({
+		status: 'success',
+		data: post,
+	});
+});
