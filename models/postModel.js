@@ -35,6 +35,12 @@ const postSchema = mongoose.Schema(
 	{ toObject: { virtuals: true } },
 );
 
+postSchema.virtual('comments', {
+	ref: 'Comment',
+	foreignField: 'post',
+	localField: '_id',
+});
+
 // Create slug when create a new post
 postSchema.pre('save', function (next) {
 	this.slug = slugify(this.title);
@@ -45,6 +51,12 @@ postSchema.pre('save', function (next) {
 
 postSchema.pre(/^find/, function (next) {
 	this.populate({ path: 'user', select: 'first_name last_name' });
+	next();
+});
+
+// show comments
+postSchema.pre(/^findOne/, function (next) {
+	this.populate({ path: 'comments', select: 'comment user publishedAt' });
 	next();
 });
 
