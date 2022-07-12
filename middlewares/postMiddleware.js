@@ -10,8 +10,8 @@ exports.canUpdateOrDeletePost = async (req, res, next) => {
 		return next(new AppError('Post not found', 404));
 	}
 
-	if (['admin', 'moderator'].includes(req.user.role) || post.user == req.user._id) {
-		next();
+	if (['admin', 'moderator'].includes(req.user.role) || req.user._id.equals(post.user._id)) {
+		return next();
 	}
 
 	return next(new AppError('unauthorized', 401));
