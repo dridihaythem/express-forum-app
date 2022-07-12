@@ -9,8 +9,6 @@ router.use(auth, notBanned);
 
 router.route('/').post(createComment);
 
-router.use(canUpdateOrDeleteComment);
-
-router.route('/:id').patch(updateComment).delete(deleteComment);
+router.route('/:id').patch(canUpdateOrDeleteComment, updateComment).delete(canUpdateOrDeleteComment, deleteComment);
 
 module.exports = router;
