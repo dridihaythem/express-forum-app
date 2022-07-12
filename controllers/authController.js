@@ -101,3 +101,14 @@ exports.resetPassword = catchAsync(async (req, res, next) => {
 
 	createAndSendToken(others, 200, res);
 });
+
+exports.banUser = async (authUser, userId) =>
+	catchAsync(
+		(async function (req, res, next) {
+			if (['admin', 'moderator'].includes(authUser.role)) {
+				await User.findByIdAndUpdate(userId, {
+					banned: true,
+				});
+			}
+		})(authUser, userId),
+	);

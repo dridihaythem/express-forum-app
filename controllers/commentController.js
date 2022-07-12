@@ -2,6 +2,7 @@ const Comment = require('../models/commentModel');
 const Post = require('../models/postModel');
 const AppError = require('../utils/AppError');
 const catchAsync = require('../utils/catchAsync');
+const { banUser } = require('./authController');
 
 exports.createComment = catchAsync(async (req, res, next) => {
 	const postId = req.params.postId;
@@ -26,7 +27,12 @@ exports.createComment = catchAsync(async (req, res, next) => {
 });
 
 exports.deleteComment = catchAsync(async (req, res, next) => {
-	await Comment.findByIdAndDelete(req.params.id);
+	const comment = Comment.findByIdAndDelete(req.params.id);
+
+	// admin and moderator can ban user
+	if (req.body.ban) {
+		await banUser(req.user, comment.user._id);
+	}
 
 	res.status(204).json({
 		status: 'success',
