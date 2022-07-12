@@ -59,3 +59,23 @@ exports.unpublishedPosts = catchAsync(async (req, res, next) => {
 		data: posts,
 	});
 });
+
+exports.publishPost = catchAsync(async (req, res, next) => {
+	const post = await Post.findOneAndUpdate(
+		{ _id: req.params.id, published: false },
+		{
+			published: true,
+			publishedAt: Date.now(),
+		},
+	)
+		.select('slug title content user')
+		.populate({ path: 'user', select: 'first_name last_name' });
+
+	if (!post) {
+		return next(new AppError('Post not found', 404));
+	}
+	res.status(200).json({
+		status: 'success',
+		data: post,
+	});
+});
