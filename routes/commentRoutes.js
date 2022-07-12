@@ -5,10 +5,12 @@ const { canUpdateOrDeleteComment } = require('../middlewares/commentMiddleware')
 
 const router = express.Router({ mergeParams: true });
 
-router.route('/').post(auth, notBanned, createComment);
-router
-	.route('/:id')
-	.patch(auth, notBanned, canUpdateOrDeleteComment, updateComment)
-	.delete(auth, notBanned, canUpdateOrDeleteComment, deleteComment);
+router.use(auth, notBanned);
+
+router.route('/').post(createComment);
+
+router.use(canUpdateOrDeleteComment);
+
+router.route('/:id').patch(updateComment).delete(deleteComment);
 
 module.exports = router;
