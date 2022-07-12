@@ -18,6 +18,6 @@ router.patch('/publish/:id', auth, restrictTo('admin', 'moderator'), publishPost
 
 // for all users
 router.route('/').get(getAllPosts).post(auth, notBanned, createPost);
-router.route('/:id').get(getPost).delete(auth, canUpdateOrDeletePost, deletePost);
+router.route('/:id').get(getPost).delete(auth, notBanned, canUpdateOrDeletePost, deletePost);
 
 module.exports = router;
