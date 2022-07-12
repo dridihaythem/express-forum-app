@@ -33,3 +33,16 @@ exports.deleteComment = catchAsync(async (req, res, next) => {
 		data: null,
 	});
 });
+
+exports.updateComment = catchAsync(async (req, res, next) => {
+	const comment = await Comment.findByIdAndUpdate(
+		req.params.id,
+		{ comment: req.body.comment },
+		{ new: true, runValidators: true },
+	);
+
+	res.status(200).json({
+		status: 'success',
+		data: { comment: comment.comment },
+	});
+});
