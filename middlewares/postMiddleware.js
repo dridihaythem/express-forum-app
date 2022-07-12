@@ -11,9 +11,7 @@ exports.canUpdateOrDeletePost = async (req, res, next) => {
 		delete filter.published;
 	}
 
-	console.log(filter);
-
-	const post = await Post.findById(req.params.id);
+	const post = await Post.findOne(filter);
 
 	if (!post) {
 		return next(new AppError('Post not found', 404));
