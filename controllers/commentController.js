@@ -22,12 +22,12 @@ exports.createComment = catchAsync(async (req, res, next) => {
 
 	res.status(201).json({
 		status: 'success',
-		data: { comment: comment.comment },
+		data: { _id: comment._id, comment: comment.comment, publishedAt: comment.publishedAt },
 	});
 });
 
 exports.deleteComment = catchAsync(async (req, res, next) => {
-	const comment = Comment.findByIdAndDelete(req.params.id);
+	const comment = await Comment.findByIdAndDelete(req.params.id);
 
 	// admin and moderator can ban user
 	if (req.body.ban) {
