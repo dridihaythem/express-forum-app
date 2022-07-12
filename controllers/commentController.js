@@ -24,3 +24,12 @@ exports.createComment = catchAsync(async (req, res, next) => {
 		data: { comment: comment.comment },
 	});
 });
+
+exports.deleteComment = catchAsync(async (req, res, next) => {
+	await Comment.findByIdAndDelete(req.params.id);
+
+	res.status(204).json({
+		status: 'success',
+		data: null,
+	});
+});
