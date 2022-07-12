@@ -23,6 +23,10 @@ const postSchema = mongoose.Schema(
 			required: [true, 'Content is required'],
 			minlength: [10, 'Content must be at least 10 characters long'],
 		},
+		comments_count: {
+			type: Number,
+			default: 0,
+		},
 		published: {
 			type: Boolean,
 			default: false,

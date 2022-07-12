@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const Post = require('./postModel');
 
 const commentSchema = mongoose.Schema({
 	user: {
@@ -19,6 +20,14 @@ const commentSchema = mongoose.Schema({
 		type: Date,
 		default: Date.now(),
 	},
+});
+
+// update comments_count after create or delete comment
+commentSchema.post(/(save|findOneAndDelete)/, async function (doc) {
+	const postId = doc.post;
+	const comments_count = await Comment.countDocuments({ post: postId });
+	console.log(`${comments_count} comments for post ${postId}`);
+	await Post.findByIdAndUpdate(postId, { comments_count });
 });
 
 commentSchema.pre(/^find/, function (next) {
