@@ -3,7 +3,7 @@ const {
 	createPost,
 	getPost,
 	getAllPosts,
-	unpublishedPosts,
+	getUnpublishedPosts,
 	publishPost,
 	deletePost,
 } = require('../controllers/postController');
@@ -13,7 +13,7 @@ const { canUpdateOrDeletePost } = require('../middlewares/postMiddleware');
 const router = express.Router();
 
 // for admin and moderator
-router.get('/unpublished', auth, restrictTo('admin', 'moderator'), unpublishedPosts);
+router.get('/unpublished', auth, restrictTo('admin', 'moderator'), getUnpublishedPosts);
 router.patch('/publish/:id', auth, restrictTo('admin', 'moderator'), publishPost);
 
 // for all users
