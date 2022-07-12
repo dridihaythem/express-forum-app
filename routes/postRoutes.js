@@ -10,6 +10,7 @@ const {
 } = require('../controllers/postController');
 const { auth, restrictTo, notBanned } = require('../middlewares/authMiddleware');
 const { canUpdateOrDeletePost } = require('../middlewares/postMiddleware');
+const commentRouter = require('./commentRoutes');
 
 const router = express.Router();
 
@@ -24,5 +25,7 @@ router
 	.get(getPost)
 	.patch(auth, notBanned, canUpdateOrDeletePost, updatePost)
 	.delete(auth, notBanned, canUpdateOrDeletePost, deletePost);
+
+router.use('/:postId/comments', commentRouter);
 
 module.exports = router;
