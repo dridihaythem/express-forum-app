@@ -41,6 +41,13 @@ postSchema.pre('save', function (next) {
 	next();
 });
 
+//  populate user
+
+postSchema.pre(/^find/, function (next) {
+	this.populate({ path: 'user', select: 'first_name last_name' });
+	next();
+});
+
 const Post = mongoose.model('Post', postSchema);
 
 module.exports = Post;
