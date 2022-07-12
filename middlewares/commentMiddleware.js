@@ -4,12 +4,7 @@ const AppError = require('../utils/AppError');
 // check if user is admin or moderator
 // or user is the author of this comment
 exports.canUpdateOrDeleteComment = async (req, res, next) => {
-	// user can update or delete only published posts
-	const filter = { _id: req.params.id, published: true };
-	// admin or moderator can update or delete any posts
-	if (['admin', 'moderator'].includes(req.user.role)) {
-		delete filter.published;
-	}
+	const filter = { _id: req.params.id, post: req.params.postId };
 
 	const comment = await Comment.findOne(filter);
 
