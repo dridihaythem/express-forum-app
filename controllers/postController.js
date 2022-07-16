@@ -25,9 +25,12 @@ exports.createPost = catchAsync(async (req, res, next) => {
 });
 
 exports.getPost = catchAsync(async (req, res, next) => {
-	const post = await Post.findOne({ _id: req.params.id, published: true }).select(
-		'slug title content comments_count user',
-	);
+	const filter = { slug: req.params.slug, published: true };
+
+	if (req.user && ['admin', 'moderator'].includes(req.user.role)) {
+		delete filter.published;
+	}
+	const post = await Post.findOne(filter).select('slug title content comments_count user');
 
 	if (!post) {
 		return next(new AppError('Post not found', 404));
@@ -75,10 +78,10 @@ exports.publishPost = catchAsync(async (req, res, next) => {
 });
 
 exports.deletePost = catchAsync(async (req, res, next) => {
-	const post = await Post.findByIdAndDelete(req.params.id);
+	const post = await Post.findOneAndDelete({ slug: req.params.slug });
 
 	// admin and moderator can ban user
-	if (req.body.ban) {
+	if (req.body.ban && ['admin', 'moderator'].includes(req.user.role)) {
 		await banUser(req.user, post.user._id);
 	}
 
@@ -91,7 +94,11 @@ exports.deletePost = catchAsync(async (req, res, next) => {
 exports.updatePost = catchAsync(async (req, res, next) => {
 	const { title, content } = req.body; // we can only update title and content
 
-	const post = await Post.findByIdAndUpdate(req.params.id, { title, content }, { new: true, runValidators: true });
+	const post = await Post.findOneAndUpdate(
+		{ slug: req.params.slug },
+		{ title, content },
+		{ new: true, runValidators: true },
+	);
 
 	res.status(200).json({
 		status: 'success',

@@ -5,7 +5,7 @@ const AppError = require('../utils/AppError');
 // or user is the author of this post
 exports.canUpdateOrDeletePost = async (req, res, next) => {
 	// user can update or delete only published posts
-	const filter = { _id: req.params.id, published: true };
+	const filter = { slug: req.params.slug, published: true };
 	// admin or moderator can update or delete any posts
 	if (['admin', 'moderator'].includes(req.user.role)) {
 		delete filter.published;
