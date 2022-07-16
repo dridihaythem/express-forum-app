@@ -92,6 +92,20 @@ paths:
         '422':
           $ref: '#/components/responses/UnprocessableError'
 
+  /auth/me:
+    get:
+      tags:
+        - auth
+      summary: get current login user data
+      operationId: me
+      responses:
+        '200':
+          $ref: '#/components/responses/Success'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+      security:
+        - bearerAuth: []
+
   /posts:
     get:
       tags:
