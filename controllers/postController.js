@@ -2,7 +2,7 @@ const Post = require('../models/postModel');
 const AppError = require('../utils/AppError');
 const catchAsync = require('../utils/catchAsync');
 const { createSlug } = require('../utils/post');
-const { banUser } = require('./authController');
+const { banUser } = require('../utils/user');
 
 exports.createPost = catchAsync(async (req, res, next) => {
 	const data = { ...req.body };
@@ -81,9 +81,7 @@ exports.deletePost = catchAsync(async (req, res, next) => {
 	const post = await Post.findOneAndDelete({ slug: req.params.slug });
 
 	// admin and moderator can ban user
-	if (req.body.ban && ['admin', 'moderator'].includes(req.user.role)) {
-		await banUser(req.user, post.user._id);
-	}
+	await banUser(req.user, post.user._id);
 
 	res.status(204).json({
 		status: 'success',

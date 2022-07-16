@@ -2,7 +2,7 @@ const Comment = require('../models/commentModel');
 const Post = require('../models/postModel');
 const AppError = require('../utils/AppError');
 const catchAsync = require('../utils/catchAsync');
-const { banUser } = require('./authController');
+const { banUser } = require('../utils/user');
 
 exports.createComment = catchAsync(async (req, res, next) => {
 	const slug = req.params.slug;
@@ -30,7 +30,7 @@ exports.deleteComment = catchAsync(async (req, res, next) => {
 	const comment = await Comment.findByIdAndDelete(req.params.id);
 
 	// admin and moderator can ban user
-	if (req.body.ban && ['admin', 'moderator'].includes(req.user.role)) {
+	if (req.body.ban) {
 		await banUser(req.user, comment.user._id);
 	}
 

@@ -93,14 +93,3 @@ exports.resetPassword = catchAsync(async (req, res, next) => {
 exports.getMe = (req, res, next) => {
 	res.json({ status: 'success', user: req.user });
 };
-
-exports.banUser = async (authUser, userId) =>
-	catchAsync(
-		(async function (req, res, next) {
-			if (['admin', 'moderator'].includes(authUser.role)) {
-				await User.findByIdAndUpdate(userId, {
-					banned: true,
-				});
-			}
-		})(authUser, userId),
-	);
