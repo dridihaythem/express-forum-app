@@ -12,9 +12,13 @@ users can :
 
 moderators and admins can :
 
-- review posts (get All unpublished posts / publish posts / delete posts / update posts / block authors)
+- review posts (get All unpublished posts / publish posts / delete posts / update posts / block users)
 
-- review comments (delete comments / update comments / block authors)
+- review comments (delete comments / update comments / block users)
+
+# DEMO
+
+https://express-forum-app.herokuapp.com/api-docs
 
 # API Documentation :
 
