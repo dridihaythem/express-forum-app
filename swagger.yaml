@@ -146,21 +146,6 @@ paths:
       security:
         - bearerAuth: []
 
-  /posts/findUnpublished:
-    get:
-      tags:
-        - 'admin and moderator : posts'
-      summary: get all unpublished posts
-      description: '📌 only admins and moderators can see unpublished posts '
-      operationId: posts.unpublished
-      responses:
-        '200':
-          $ref: '#/components/responses/Success'
-        '401':
-          $ref: '#/components/responses/UnauthorizedError'
-      security:
-        - bearerAuth: []
-
   /posts/{slug}:
     get:
       tags:
@@ -251,6 +236,133 @@ paths:
           $ref: '#/components/responses/NoContent'
         '404':
           description: 'Post not found'
+      security:
+        - bearerAuth: []
+
+  /posts/{slug}/comments:
+    post:
+      tags:
+        - comments
+      summary: create new comment
+      operationId: comments.create
+      parameters:
+        - name: 'slug'
+          in: 'path'
+          description: 'slug'
+          required: true
+          type: 'string'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: 'object'
+              properties:
+                comment:
+                  type: 'string'
+                  default: 'This is my first comment'
+      responses:
+        '201':
+          $ref: '#/components/responses/Created'
+        '422':
+          $ref: '#/components/responses/UnprocessableError'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '403':
+          $ref: '#/components/responses/DisabledAccount'
+        '404':
+          description: 'Post not found'
+      security:
+        - bearerAuth: []
+
+  /posts/{slug}/comments/{commentID}:
+    patch:
+      tags:
+        - comments
+      summary: edit comments
+      description: '📌 comment can be edited by author , admin , moderator <br>📌 banned users cant edit their comments'
+      operationId: comments.edit
+      parameters:
+        - name: 'slug'
+          in: 'path'
+          description: 'slug'
+          required: true
+          type: 'string'
+        - name: 'commentID'
+          in: 'path'
+          description: 'commentID'
+          required: true
+          type: 'string'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: 'object'
+              properties:
+                comment:
+                  type: 'string'
+                  default: 'I just updated my first comment'
+      responses:
+        '200':
+          $ref: '#/components/responses/Success'
+        '422':
+          $ref: '#/components/responses/UnprocessableError'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '403':
+          $ref: '#/components/responses/DisabledAccount'
+        '404':
+          description: 'Post or comment not found'
+      security:
+        - bearerAuth: []
+
+    delete:
+      tags:
+        - comments
+      summary: delete comment
+      description: '📌 comment can be deleted by author , admin , moderator <br>📌 banned users cant delete their comments'
+      operationId: comments.delete
+      parameters:
+        - name: 'slug'
+          in: 'path'
+          description: 'slug'
+          required: true
+          type: 'string'
+        - name: 'commentID'
+          in: 'path'
+          description: 'commentID'
+          required: true
+          type: 'string'
+        - name: 'ban'
+          in: 'body'
+          description: 'if an admin or moderator wants to block the user who wrote this comment (Login user must be an admin/moderator otherwise params will be ignored)'
+          required: false
+          type: 'boolean'
+          default: false
+      responses:
+        '200':
+          $ref: '#/components/responses/Success'
+        '422':
+          $ref: '#/components/responses/UnprocessableError'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '403':
+          $ref: '#/components/responses/DisabledAccount'
+        '404':
+          description: 'Post or comment not found'
+      security:
+        - bearerAuth: []
+  /posts/findUnpublished:
+    get:
+      tags:
+        - 'admin and moderator : posts'
+      summary: get all unpublished posts
+      description: '📌 only admins and moderators can see unpublished posts '
+      operationId: posts.unpublished
+      responses:
+        '200':
+          $ref: '#/components/responses/Success'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
       security:
         - bearerAuth: []
 
