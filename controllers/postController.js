@@ -4,11 +4,8 @@ const catchAsync = require('../utils/catchAsync');
 const { banUser } = require('./authController');
 
 exports.createPost = catchAsync(async (req, res, next) => {
-	const data = {
-		title: req.body.title,
-		content: req.body.content,
-		user: req.user._id,
-	};
+	const data = { ...req.body };
+	data.user = req.user._id;
 
 	// posts from users with roles "admin" , "moderator" must be approved immediately
 
