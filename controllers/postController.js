@@ -61,7 +61,7 @@ exports.findUnpublished = catchAsync(async (req, res, next) => {
 
 exports.publishPost = catchAsync(async (req, res, next) => {
 	const post = await Post.findOneAndUpdate(
-		{ _id: req.params.id, published: false },
+		{ slug: req.params.slug, published: false },
 		{
 			published: true,
 			publishedAt: Date.now(),

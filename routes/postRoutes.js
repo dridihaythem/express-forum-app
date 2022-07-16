@@ -18,7 +18,7 @@ const router = express.Router();
 
 // for admin and moderator
 router.get('/findUnpublished', auth, restrictTo('admin', 'moderator'), findUnpublished);
-router.patch('/publish/:id', auth, restrictTo('admin', 'moderator'), publishPost);
+router.patch('/:slug/publish', auth, restrictTo('admin', 'moderator'), publishPost);
 
 // for all users
 router.route('/').get(getAllPosts).post(auth, notBanned, validate(createPostRequest), createPost);
