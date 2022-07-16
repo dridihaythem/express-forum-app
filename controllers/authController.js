@@ -31,7 +31,7 @@ exports.login = catchAsync(async (req, res, next) => {
 	}
 
 	if (user.disabled) {
-		return next(new AppError('Your account has been disabled', 401));
+		return next(new AppError('Your account has been disabled', 403));
 	}
 
 	const { password: _password, ...others } = user._doc;
