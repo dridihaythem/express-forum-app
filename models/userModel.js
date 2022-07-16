@@ -49,18 +49,6 @@ const userSchema = mongoose.Schema({
 		minlength: [6, 'Password must be at least 6 characters long'],
 		select: false,
 	},
-	passwordConfirmation: {
-		type: String,
-		required: [true, 'Please confirm your password'],
-		validate: {
-			// this work on create or save only
-			// doesn't work on update (exp : findOneAndUpdate)
-			validator: function (val) {
-				return val == this.password;
-			},
-			message: 'Passwords do not match',
-		},
-	},
 	createdAt: {
 		type: Date,
 		default: Date.now(),
@@ -71,9 +59,7 @@ const userSchema = mongoose.Schema({
 
 userSchema.pre('save', async function (next) {
 	if (!this.isModified('password')) next();
-	console.log('encrypt password and remove passwordConfirmation field before save');
 	this.password = await bcrypt.hash(this.password, 10);
-	this.passwordConfirmation = undefined;
 	next();
 });
 
