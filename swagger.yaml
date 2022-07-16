@@ -1,0 +1,148 @@
+openapi: '3.0.0'
+info:
+  title: Express Forum APP
+  description: simple Express Forum APP API
+  version: '1.0.0'
+servers:
+  - url: /api/v1
+
+paths:
+  /auth/login:
+    post:
+      tags:
+        - auth
+      summary: login to your account
+      operationId: login
+      requestBody:
+        $ref: '#/components/requestBodies/loginBody'
+      responses:
+        '200':
+          $ref: '#/components/responses/Success'
+        '422':
+          $ref: '#/components/responses/UnprocessableError'
+        '401':
+          description: Incorrect email or password
+        '403':
+          description: Disabled Account
+
+  /auth/signup:
+    post:
+      tags:
+        - auth
+      summary: create new account
+      operationId: signup
+      requestBody:
+        $ref: '#/components/requestBodies/signupBody'
+      responses:
+        '201':
+          $ref: '#/components/responses/Created'
+        '422':
+          $ref: '#/components/responses/UnprocessableError'
+
+  /auth/forget-password:
+    post:
+      tags:
+        - auth
+      summary: send password reset token to your email
+      operationId: forget-password
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: 'object'
+              properties:
+                email:
+                  type: 'string'
+                  default: 'haithemdridiweb@gmail.com'
+      responses:
+        '200':
+          $ref: '#/components/responses/Success'
+        '422':
+          $ref: '#/components/responses/UnprocessableError'
+
+  /auth/reset-password/{token}:
+    patch:
+      tags:
+        - auth
+      summary: reset your password
+      operationId: reset-password
+      parameters:
+        - name: 'token'
+          in: 'path'
+          description: 'reset password token'
+          required: true
+          type: 'string'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: 'object'
+              properties:
+                password:
+                  type: 'string'
+                  default: 'mynewpassword'
+                passwordConfirmation:
+                  type: 'string'
+                  default: 'mynewpassword'
+      responses:
+        '200':
+          $ref: '#/components/responses/Success'
+        '400':
+          description: Token is invalid or has expired
+        '422':
+          $ref: '#/components/responses/UnprocessableError'
+
+components:
+  requestBodies:
+    loginBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            type: 'object'
+            properties:
+              email:
+                type: 'string'
+                default: 'haithemdridiweb@gmail.com'
+              password:
+                type: 'string'
+                default: '123456789'
+
+    signupBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            type: 'object'
+            properties:
+              first_name:
+                type: 'string'
+                default: 'Haythem'
+              last_name:
+                type: 'string'
+                default: 'Dridi'
+              birthday:
+                type: 'string'
+                default: '01/18/1999'
+              email:
+                type: 'string'
+                default: 'haithemdridiweb@gmail.com'
+              password:
+                type: 'string'
+                default: '123456789'
+              passwordConfirmation:
+                type: 'string'
+                default: '123456789'
+
+  responses:
+    Success:
+      description: success
+
+    Created:
+      description: created
+
+    UnprocessableError:
+      description: Invalid inputs
+
+    UnauthorizedError:
+      description: Access token is missing or invalid
