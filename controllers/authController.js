@@ -3,7 +3,7 @@ const crypto = require('crypto');
 const User = require('./../models/userModel');
 const catchAsync = require('./../utils/catchAsync');
 const AppError = require('./../utils/AppError');
-const sendEmail = require('../utils/SendEmail');
+const sendEmail = require('./../utils/SendEmail');
 
 const createAndSendToken = (user, statusCode, res) => {
 	const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: process.env.JWT_EXPIRES_IN });
