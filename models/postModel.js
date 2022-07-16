@@ -1,5 +1,4 @@
 const mongoose = require('mongoose');
-const slugify = require('slugify');
 
 const postSchema = mongoose.Schema(
 	{
@@ -43,12 +42,6 @@ postSchema.virtual('comments', {
 	ref: 'Comment',
 	foreignField: 'post',
 	localField: '_id',
-});
-
-// Create slug when create a new post
-postSchema.pre('save', function (next) {
-	this.slug = slugify(this.title);
-	next();
 });
 
 //  populate user

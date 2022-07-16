@@ -1,11 +1,13 @@
 const Post = require('../models/postModel');
 const AppError = require('../utils/AppError');
 const catchAsync = require('../utils/catchAsync');
+const { createSlug } = require('../utils/post');
 const { banUser } = require('./authController');
 
 exports.createPost = catchAsync(async (req, res, next) => {
 	const data = { ...req.body };
 	data.user = req.user._id;
+	data.slug = await createSlug(data.title);
 
 	// posts from users with roles "admin" , "moderator" must be approved immediately
 
@@ -18,7 +20,7 @@ exports.createPost = catchAsync(async (req, res, next) => {
 
 	res.status(201).json({
 		status: 'success',
-		data: { _id: post._id, title: post.title, content: post.content },
+		data: { _id: post._id, slug: post.slug, title: post.title, content: post.content },
 	});
 });
 
