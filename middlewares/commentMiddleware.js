@@ -6,6 +6,11 @@ const AppError = require('../utils/AppError');
 // or user is the author of this comment
 exports.canUpdateOrDeleteComment = async (req, res, next) => {
 	const post = await Post.findOne({ slug: req.params.slug });
+
+	if (!post) {
+		return next(new AppError('Post not found', 404));
+	}
+
 	const filter = { _id: req.params.id, post: post.id };
 
 	const comment = await Comment.findOne(filter);
