@@ -25,7 +25,7 @@ router.route('/').get(getAllPosts).post(auth, notBanned, validate(createPostRequ
 router
 	.route('/:slug')
 	.get(appendUserIfTokenExist, getPost)
-	.patch(auth, notBanned, canUpdateOrDeletePost, updatePost)
+	.patch(auth, notBanned, canUpdateOrDeletePost, validate(createPostRequest), updatePost)
 	.delete(auth, notBanned, canUpdateOrDeletePost, deletePost);
 
 router.use('/:postId/comments', commentRouter);
