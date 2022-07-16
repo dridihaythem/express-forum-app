@@ -23,7 +23,7 @@ paths:
         '401':
           description: Incorrect email or password
         '403':
-          description: Disabled Account
+          $ref: '#/components/responses/DisabledAccount'
 
   /auth/signup:
     post:
@@ -92,7 +92,176 @@ paths:
         '422':
           $ref: '#/components/responses/UnprocessableError'
 
+  /posts:
+    get:
+      tags:
+        - posts
+      summary: get all posts
+      operationId: posts.getAll
+      responses:
+        '200':
+          $ref: '#/components/responses/Success'
+
+    post:
+      tags:
+        - posts
+      summary: create new post
+      description: '📌 Active users only can create new posts. <br> 📌 All posts must be approved by an admins / moderators.<br> 📌 Admins and moderators posts will be approved automatically'
+      operationId: posts.create
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: 'object'
+              properties:
+                title:
+                  type: 'string'
+                  default: 'My first post title'
+                content:
+                  type: 'string'
+                  default: 'Hello every one 😁'
+      responses:
+        '201':
+          $ref: '#/components/responses/Created'
+        '422':
+          $ref: '#/components/responses/UnprocessableError'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '403':
+          $ref: '#/components/responses/DisabledAccount'
+      security:
+        - bearerAuth: []
+
+  /posts/findUnpublished:
+    get:
+      tags:
+        - 'admin and moderator : posts'
+      summary: get all unpublished posts
+      description: '📌 only admins and moderators can see unpublished posts '
+      operationId: posts.unpublished
+      responses:
+        '200':
+          $ref: '#/components/responses/Success'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+      security:
+        - bearerAuth: []
+
+  /posts/{slug}:
+    get:
+      tags:
+        - posts
+      summary: get single post with slug
+      description: '📌 Users can see only published posts.<br> 📌 Admin and moderator can see all posts'
+      operationId: posts.getPost
+      parameters:
+        - name: 'slug'
+          in: 'path'
+          description: 'slug'
+          required: true
+          type: 'string'
+      responses:
+        '200':
+          $ref: '#/components/responses/Success'
+        '404':
+          description: 'Post not found'
+      security:
+        - bearerAuth: []
+    patch:
+      tags:
+        - posts
+      summary: edit post
+      description: '📌 post can be edited by author , admin , moderator <br> 📌 only published posts can be edited by their author <br>📌 banned users cant edit their posts'
+      operationId: posts.edit
+      parameters:
+        - name: 'slug'
+          in: 'path'
+          description: 'slug'
+          required: true
+          type: 'string'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: 'object'
+              properties:
+                title:
+                  type: 'string'
+                  default: 'I just updated my first post'
+                content:
+                  type: 'string'
+                  default: 'Hi every one 😁'
+      responses:
+        '200':
+          $ref: '#/components/responses/Success'
+        '422':
+          $ref: '#/components/responses/UnprocessableError'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '403':
+          $ref: '#/components/responses/DisabledAccount'
+        '404':
+          description: 'Post not found'
+      security:
+        - bearerAuth: []
+
+    delete:
+      tags:
+        - posts
+      summary: delete Post
+      description: '📌 post can be deleted by author , admin , moderator <br> 📌 only published posts can be deleted by their author  <br> 📌 banned users cant delete their posts'
+      operationId: posts.delete
+      parameters:
+        - name: 'slug'
+          in: 'path'
+          description: 'slug'
+          required: true
+          type: 'string'
+        - name: 'ban'
+          in: 'body'
+          description: 'if an admin or moderator wants to block the user who wrote this post (Login user must be an admin/moderator otherwise params will be ignored)'
+          required: false
+          type: 'boolean'
+          default: false
+
+      responses:
+        '200':
+          $ref: '#/components/responses/Success'
+        '422':
+          $ref: '#/components/responses/UnprocessableError'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '403':
+          $ref: '#/components/responses/DisabledAccount'
+        '204':
+          $ref: '#/components/responses/NoContent'
+        '404':
+          description: 'Post not found'
+      security:
+        - bearerAuth: []
+
+  /posts/{slug}/publish:
+    patch:
+      tags:
+        - 'admin and moderator : posts'
+      summary: publish unpublished posts
+      description: '📌 only admins and moderators can publish unpublished posts '
+      operationId: posts.unpublished
+      responses:
+        '200':
+          $ref: '#/components/responses/Success'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+      security:
+        - bearerAuth: []
+
 components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
   requestBodies:
     loginBody:
       required: true
@@ -140,6 +309,12 @@ components:
 
     Created:
       description: created
+
+    NoContent:
+      description: No Content
+
+    DisabledAccount:
+      description: Disabled Account
 
     UnprocessableError:
       description: Invalid inputs
