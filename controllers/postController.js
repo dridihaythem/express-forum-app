@@ -50,7 +50,7 @@ exports.getAllPosts = catchAsync(async (req, res, next) => {
 	});
 });
 
-exports.getUnpublishedPosts = catchAsync(async (req, res, next) => {
+exports.findUnpublished = catchAsync(async (req, res, next) => {
 	const posts = await Post.find({ published: false }).select('slug title content comments_count user');
 
 	res.status(200).json({

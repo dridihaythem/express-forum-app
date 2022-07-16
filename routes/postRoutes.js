@@ -3,7 +3,7 @@ const {
 	createPost,
 	getPost,
 	getAllPosts,
-	getUnpublishedPosts,
+	findUnpublished,
 	publishPost,
 	deletePost,
 	updatePost,
@@ -17,7 +17,7 @@ const commentRouter = require('./commentRoutes');
 const router = express.Router();
 
 // for admin and moderator
-router.get('/unpublished', auth, restrictTo('admin', 'moderator'), getUnpublishedPosts);
+router.get('/findUnpublished', auth, restrictTo('admin', 'moderator'), findUnpublished);
 router.patch('/publish/:id', auth, restrictTo('admin', 'moderator'), publishPost);
 
 // for all users
