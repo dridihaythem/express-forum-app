@@ -42,15 +42,7 @@ exports.login = catchAsync(async (req, res, next) => {
 exports.forgetPassword = catchAsync(async (req, res, next) => {
 	const { email } = req.body;
 
-	if (!email) {
-		return next(new AppError('Please provide your email', 401));
-	}
-
 	const user = await User.findOne({ email });
-
-	if (!user) {
-		return next(new AppError('No user found with this email', 404));
-	}
 
 	const token = user.createResetToken();
 
