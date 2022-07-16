@@ -1,10 +1,12 @@
 const Comment = require('../models/commentModel');
+const Post = require('../models/postModel');
 const AppError = require('../utils/AppError');
 
 // check if user is admin or moderator
 // or user is the author of this comment
 exports.canUpdateOrDeleteComment = async (req, res, next) => {
-	const filter = { _id: req.params.id, post: req.params.postId };
+	const post = await Post.findOne({ slug: req.params.slug });
+	const filter = { _id: req.params.id, post: post.id };
 
 	const comment = await Comment.findOne(filter);
 

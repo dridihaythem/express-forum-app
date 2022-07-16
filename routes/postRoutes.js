@@ -28,6 +28,6 @@ router
 	.patch(auth, notBanned, canUpdateOrDeletePost, validate(createPostRequest), updatePost)
 	.delete(auth, notBanned, canUpdateOrDeletePost, deletePost);
 
-router.use('/:postId/comments', commentRouter);
+router.use('/:slug/comments', commentRouter);
 
 module.exports = router;

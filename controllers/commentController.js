@@ -5,17 +5,17 @@ const catchAsync = require('../utils/catchAsync');
 const { banUser } = require('./authController');
 
 exports.createComment = catchAsync(async (req, res, next) => {
-	const postId = req.params.postId;
+	const slug = req.params.slug;
 
 	// check if post is published
-	const post = await Post.findOne({ _id: postId, published: true });
+	const post = await Post.findOne({ slug: slug, published: true });
 
 	if (!post) {
 		return next(new AppError('Post not found', 404));
 	}
 
 	const comment = await Comment.create({
-		post: postId,
+		post: post.id,
 		user: req.user._id,
 		comment: req.body.comment,
 	});
@@ -30,7 +30,7 @@ exports.deleteComment = catchAsync(async (req, res, next) => {
 	const comment = await Comment.findByIdAndDelete(req.params.id);
 
 	// admin and moderator can ban user
-	if (req.body.ban) {
+	if (req.body.ban && ['admin', 'moderator'].includes(req.user.role)) {
 		await banUser(req.user, comment.user._id);
 	}
 
