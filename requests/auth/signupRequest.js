@@ -19,6 +19,7 @@ const signupRequest = Joi.object({
 		'date.less': 'You must be at least 13 years old',
 	}),
 	email: Joi.string().email().required().lowercase().external(checkUsedEmail),
+	gender: Joi.string().valid('male', 'female').required().lowercase(),
 	password: Joi.string().min(6).required(),
 	passwordConfirmation: Joi.string().min(6).required().valid(Joi.ref('password')),
 });

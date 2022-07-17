@@ -434,6 +434,9 @@ components:
               last_name:
                 type: 'string'
                 default: 'Dridi'
+              gender:
+                type: 'string'
+                default: 'male'
               birthday:
                 type: 'string'
                 default: '01/18/1999'

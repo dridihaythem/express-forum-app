@@ -30,6 +30,10 @@ const userSchema = mongoose.Schema(
 			lowercase: true,
 			validate: [validator.isEmail, 'Please enter a valid email'],
 		},
+		gender: {
+			type: String,
+			enum: ['male', 'female'],
+		},
 		role: {
 			type: String,
 			enum: ['user', 'moderator', 'admin'],
