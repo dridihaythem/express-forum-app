@@ -9,6 +9,7 @@ const AppError = require('./utils/AppError');
 const errorMiddleware = require('./utils/errorMiddleware');
 const authRoutes = require('./routes/authRoutes');
 const postRoutes = require('./routes/postRoutes');
+const statisticRoutes = require('./routes/statisticRoutes');
 
 const swaggerDocument = YAML.load('./swagger.yaml');
 const app = express();
@@ -22,6 +23,7 @@ app.use(compression());
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 app.use('/api/v1/auth', authRoutes);
 app.use('/api/v1/posts', postRoutes);
+app.use('/api/v1/statistics', statisticRoutes);
 
 app.all('*', (req, res, next) => {
 	next(new AppError('endpoint not found', 404));

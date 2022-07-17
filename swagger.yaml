@@ -399,6 +399,51 @@ paths:
       security:
         - bearerAuth: []
 
+  /statistics/users/getByGender:
+    get:
+      tags:
+        - 'admin: users statistics'
+      operationId: statistics.users.getByGender
+      responses:
+        '200':
+          $ref: '#/components/responses/Success'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+      security:
+        - bearerAuth: []
+
+  /statistics/users/getByRegistrationMonth:
+    get:
+      tags:
+        - 'admin: users statistics'
+      operationId: statistics.users.getByRegistrationMonth
+      responses:
+        '200':
+          $ref: '#/components/responses/Success'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+      security:
+        - bearerAuth: []
+
+  /statistics/users/getByRole:
+    get:
+      tags:
+        - 'admin: users statistics'
+      operationId: statistics.users.getByRole
+      responses:
+        '200':
+          $ref: '#/components/responses/Success'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+      security:
+        - bearerAuth: []
+
 components:
   securitySchemes:
     bearerAuth:
@@ -468,3 +513,6 @@ components:
 
     UnauthorizedError:
       description: Access token is missing or invalid
+
+    Forbidden:
+      description: You do not have permission to perform this action
