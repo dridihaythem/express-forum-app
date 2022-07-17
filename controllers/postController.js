@@ -1,4 +1,5 @@
 const Post = require('../models/postModel');
+const User = require('../models/userModel');
 const AppError = require('../utils/AppError');
 const catchAsync = require('../utils/catchAsync');
 const { createSlug } = require('../utils/post');
@@ -101,5 +102,22 @@ exports.updatePost = catchAsync(async (req, res, next) => {
 	res.status(200).json({
 		status: 'success',
 		data: post,
+	});
+});
+
+exports.findByUser = catchAsync(async (req, res, next) => {
+	const user = await User.findById(req.params.userId).populate({
+		path: 'posts',
+		match: { published: true },
+		select: 'slug title content -user',
+	});
+
+	if (!user) {
+		return next(new AppError('User not found', 404));
+	}
+
+	res.status(200).json({
+		status: 'success',
+		data: user.posts,
 	});
 });

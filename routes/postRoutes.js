@@ -7,8 +7,10 @@ const {
 	publishPost,
 	deletePost,
 	updatePost,
+	findByUser,
 } = require('../controllers/postController');
 const { auth, restrictTo, notBanned, appendUserIfTokenExist } = require('../middlewares/authMiddleware');
+const checkId = require('../middlewares/checkId');
 const { canUpdateOrDeletePost } = require('../middlewares/postMiddleware');
 const createPostRequest = require('../requests/posts/createPostRequest');
 const validate = require('../utils/validate');
@@ -22,6 +24,7 @@ router.patch('/:slug/publish', auth, restrictTo('admin', 'moderator'), publishPo
 
 // for all users
 router.route('/').get(getAllPosts).post(auth, notBanned, validate(createPostRequest), createPost);
+router.get('/findByUser/:userId', checkId('userId'), findByUser);
 router
 	.route('/:slug')
 	.get(appendUserIfTokenExist, getPost)

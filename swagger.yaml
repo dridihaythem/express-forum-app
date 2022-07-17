@@ -239,6 +239,24 @@ paths:
       security:
         - bearerAuth: []
 
+  /posts/findByUser/{userId}:
+    get:
+      tags:
+        - posts
+      summary: get all user posts
+      operationId: posts.findByUser
+      parameters:
+        - name: 'userId'
+          in: 'path'
+          description: 'userId'
+          required: true
+          type: 'string'
+      responses:
+        '200':
+          $ref: '#/components/responses/Success'
+        '404':
+          description: 'User not found'
+
   /posts/{slug}/comments:
     post:
       tags:

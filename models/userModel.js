@@ -3,59 +3,67 @@ const validator = require('validator');
 const bcrypt = require('bcrypt');
 const crypto = require('crypto');
 
-const userSchema = mongoose.Schema({
-	first_name: {
-		type: String,
-		required: [true, 'First name is required'],
-		lowercase: true,
-		minlength: [3, 'First name must be at least 3 characters long'],
-		maxlength: [10, 'First name must be at most 10 characters long'],
+const userSchema = mongoose.Schema(
+	{
+		first_name: {
+			type: String,
+			required: [true, 'First name is required'],
+			lowercase: true,
+			minlength: [3, 'First name must be at least 3 characters long'],
+			maxlength: [10, 'First name must be at most 10 characters long'],
+		},
+		last_name: {
+			type: String,
+			required: [true, 'Last name is required'],
+			lowercase: true,
+			minlength: [3, 'Last name must be at least 3 characters long'],
+			maxlength: [10, 'Last name must be at most 10 characters long'],
+		},
+		birthday: {
+			type: Date,
+			required: [true, 'Birthday is required'],
+		},
+		email: {
+			type: String,
+			required: [true, 'Email is required'],
+			unique: [true, 'Email is already in use'],
+			lowercase: true,
+			validate: [validator.isEmail, 'Please enter a valid email'],
+		},
+		role: {
+			type: String,
+			enum: ['user', 'moderator', 'admin'],
+			default: 'user',
+		},
+		banned: {
+			type: Boolean,
+			default: false,
+		},
+		// account is active / disabled
+		disabled: {
+			type: Boolean,
+			default: false,
+		},
+		password: {
+			type: String,
+			required: [true, 'Password is required'],
+			minlength: [6, 'Password must be at least 6 characters long'],
+			select: false,
+		},
+		createdAt: {
+			type: Date,
+			default: Date.now(),
+		},
+		passwordResetToken: String,
+		passwordResetExpires: Date,
 	},
-	last_name: {
-		type: String,
-		required: [true, 'Last name is required'],
-		lowercase: true,
-		minlength: [3, 'Last name must be at least 3 characters long'],
-		maxlength: [10, 'Last name must be at most 10 characters long'],
+	{
+		toJSON: { virtuals: true },
+		toObject: { virtuals: true },
 	},
-	birthday: {
-		type: Date,
-		required: [true, 'Birthday is required'],
-	},
-	email: {
-		type: String,
-		required: [true, 'Email is required'],
-		unique: [true, 'Email is already in use'],
-		lowercase: true,
-		validate: [validator.isEmail, 'Please enter a valid email'],
-	},
-	role: {
-		type: String,
-		enum: ['user', 'moderator', 'admin'],
-		default: 'user',
-	},
-	banned: {
-		type: Boolean,
-		default: false,
-	},
-	// account is active / disabled
-	disabled: {
-		type: Boolean,
-		default: false,
-	},
-	password: {
-		type: String,
-		required: [true, 'Password is required'],
-		minlength: [6, 'Password must be at least 6 characters long'],
-		select: false,
-	},
-	createdAt: {
-		type: Date,
-		default: Date.now(),
-	},
-	passwordResetToken: String,
-	passwordResetExpires: Date,
-});
+);
+
+userSchema.virtual('posts', { ref: 'Post', foreignField: 'user', localField: '_id' });
 
 userSchema.pre('save', async function (next) {
 	if (!this.isModified('password')) next();
