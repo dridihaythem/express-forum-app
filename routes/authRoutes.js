@@ -1,6 +1,6 @@
 const express = require('express');
 const { getMe, updateMe, uploadUserPhoto, resizeUserPhoto } = require('../controllers/userController');
-const { auth } = require('../middlewares/authMiddleware');
+const { auth, notBanned } = require('../middlewares/authMiddleware');
 const forgetPasswordRequest = require('../requests/auth/forgetPasswordRequest');
 const loginRequest = require('../requests/auth/loginRequest');
 const resetPasswordRequest = require('../requests/auth/resetPasswordRequest');
@@ -11,7 +11,10 @@ const authController = require('./../controllers/authController');
 
 const router = express.Router();
 
-router.route('/me').get(auth, getMe).post(auth, uploadUserPhoto, resizeUserPhoto, validate(updateMeRequest), updateMe);
+router
+	.route('/me')
+	.get(auth, getMe)
+	.post(auth, notBanned, uploadUserPhoto, resizeUserPhoto, validate(updateMeRequest), updateMe);
 router.post('/signup', validate(signupRequest), authController.signup);
 router.post('/login', validate(loginRequest), authController.login);
 router.post('/forget-password', validate(forgetPasswordRequest), authController.forgetPassword);
