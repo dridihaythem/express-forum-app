@@ -105,6 +105,46 @@ paths:
           $ref: '#/components/responses/UnauthorizedError'
       security:
         - bearerAuth: []
+    post:
+      tags:
+        - auth
+      summary: update current login user data
+      operationId: me.update
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                first_name:
+                  type: string
+                last_name:
+                  type: String
+                birthday:
+                  type: String
+                gender:
+                  type: String
+                photo:
+                  type: string
+                  format: binary
+                currentPassword:
+                  type: string
+                  description: required only if user want to change his password
+                password:
+                  type: String
+                passwordConfirmation:
+                  type: String
+      responses:
+        '200':
+          $ref: '#/components/responses/Success'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '422':
+          $ref: '#/components/responses/UnprocessableError'
+        '403':
+          $ref: '#/components/responses/DisabledAccount'
+      security:
+        - bearerAuth: []
 
   /posts:
     get:
