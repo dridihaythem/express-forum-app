@@ -14,6 +14,8 @@ const statisticRoutes = require('./routes/statisticRoutes');
 const swaggerDocument = YAML.load('./swagger.yaml');
 const app = express();
 
+app.use(express.static('public'));
+
 app.use(helmet());
 app.use(express.json({ limit: '10kb' }));
 app.use(mongoSanitize());

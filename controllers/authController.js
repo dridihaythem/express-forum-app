@@ -10,7 +10,16 @@ const createAndSendToken = (user, statusCode, res) => {
 	res.status(statusCode).json({
 		status: 'success',
 		token: token,
-		data: user,
+		data: {
+			first_name: user.first_name,
+			last_name: user.last_name,
+			photo: user.photo,
+			birthday: user.birthday,
+			email: user.email,
+			gender: user.gender,
+			role: user.role,
+			createdAt: user.createdAt,
+		},
 	});
 };
 
@@ -34,9 +43,7 @@ exports.login = catchAsync(async (req, res, next) => {
 		return next(new AppError('Your account has been disabled', 403));
 	}
 
-	const { password: _password, ...others } = user._doc;
-
-	createAndSendToken(others, 200, res);
+	createAndSendToken(user, 200, res);
 });
 
 exports.forgetPassword = catchAsync(async (req, res, next) => {
@@ -85,7 +92,5 @@ exports.resetPassword = catchAsync(async (req, res, next) => {
 
 	await user.save();
 
-	const { password: _password, ...others } = user._doc;
-
-	createAndSendToken(others, 200, res);
+	createAndSendToken(user, 200, res);
 });

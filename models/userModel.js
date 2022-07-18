@@ -37,6 +37,7 @@ const userSchema = mongoose.Schema(
 		photo: {
 			type: String,
 			default: 'default.jpeg',
+			get: (photo) => `${process.env.APP_URL}/images/users/${photo}`,
 		},
 		role: {
 			type: String,
@@ -66,8 +67,8 @@ const userSchema = mongoose.Schema(
 		passwordResetExpires: Date,
 	},
 	{
-		toJSON: { virtuals: true },
-		toObject: { virtuals: true },
+		toJSON: { virtuals: true, getters: true, setters: true },
+		toObject: { virtuals: true, getters: true, setters: true },
 	},
 );
 
