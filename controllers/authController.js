@@ -89,7 +89,3 @@ exports.resetPassword = catchAsync(async (req, res, next) => {
 
 	createAndSendToken(others, 200, res);
 });
-
-exports.getMe = (req, res, next) => {
-	res.json({ status: 'success', user: req.user });
-};
