@@ -34,6 +34,10 @@ const userSchema = mongoose.Schema(
 			type: String,
 			enum: ['male', 'female'],
 		},
+		photo: {
+			type: String,
+			default: 'default.jpeg',
+		},
 		role: {
 			type: String,
 			enum: ['user', 'moderator', 'admin'],
@@ -70,6 +74,7 @@ const userSchema = mongoose.Schema(
 userSchema.virtual('posts', { ref: 'Post', foreignField: 'user', localField: '_id' });
 
 userSchema.pre('save', async function (next) {
+	console.log('i called save method');
 	if (!this.isModified('password')) next();
 	this.password = await bcrypt.hash(this.password, 10);
 	next();
@@ -78,6 +83,10 @@ userSchema.pre('save', async function (next) {
 userSchema.methods.checkPassword = async function (password, hashedPassword) {
 	console.log(`compare ${password} and ${hashedPassword}`);
 	return await bcrypt.compare(password, hashedPassword);
+};
+
+userSchema.statics.encryptPassword = async (password) => {
+	return await bcrypt.hash(password, 10);
 };
 
 userSchema.methods.createResetToken = function () {
