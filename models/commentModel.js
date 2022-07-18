@@ -31,7 +31,7 @@ commentSchema.post(/(save|findOneAndDelete)/, async function (doc) {
 });
 
 commentSchema.pre(/^find/, function (next) {
-	this.populate({ path: 'user', select: 'first_name last_name' });
+	this.populate({ path: 'user', select: 'first_name last_name photo birthday gender createdAt' });
 	next();
 });
 

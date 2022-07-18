@@ -47,7 +47,7 @@ postSchema.virtual('comments', {
 //  populate user
 
 postSchema.pre(/^find/, function (next) {
-	this.populate({ path: 'user', select: 'first_name last_name' });
+	this.populate({ path: 'user', select: 'first_name last_name photo birthday gender createdAt' });
 	next();
 });
 
