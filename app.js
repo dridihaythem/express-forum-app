@@ -5,6 +5,7 @@ const helmet = require('helmet');
 const hpp = require('hpp');
 const swaggerUi = require('swagger-ui-express');
 const YAML = require('yamljs');
+const cors = require('cors');
 const AppError = require('./utils/AppError');
 const errorMiddleware = require('./utils/errorMiddleware');
 const authRoutes = require('./routes/authRoutes');
@@ -16,6 +17,7 @@ const app = express();
 
 app.use(express.static('public'));
 
+app.use(cors());
 app.use(helmet());
 app.use(express.json({ limit: '10kb' }));
 app.use(mongoSanitize());
