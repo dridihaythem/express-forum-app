@@ -31,7 +31,7 @@ exports.getPost = catchAsync(async (req, res, next) => {
 	if (req.user && ['admin', 'moderator'].includes(req.user.role)) {
 		delete filter.published;
 	}
-	const post = await Post.findOne(filter).select('slug title content comments_count user');
+	const post = await Post.findOne(filter).select('slug title content comments_count user publishedAt');
 
 	if (!post) {
 		return next(new AppError('Post not found', 404));
@@ -43,7 +43,9 @@ exports.getPost = catchAsync(async (req, res, next) => {
 });
 
 exports.getAllPosts = catchAsync(async (req, res, next) => {
-	const posts = await Post.find({ published: true }).select('slug title content comments_count user');
+	const posts = await Post.find({ published: true })
+		.sort({ publishedAt: -1 })
+		.select('slug title content comments_count user publishedAt');
 
 	res.status(200).json({
 		status: 'success',
