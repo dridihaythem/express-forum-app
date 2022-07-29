@@ -11,6 +11,7 @@ const createAndSendToken = (user, statusCode, res) => {
 		status: 'success',
 		token: token,
 		data: {
+			_id: user._id,
 			first_name: user.first_name,
 			last_name: user.last_name,
 			photo: user.photo,
@@ -25,9 +26,8 @@ const createAndSendToken = (user, statusCode, res) => {
 
 exports.signup = catchAsync(async (req, res) => {
 	const user = await User.create(req.body);
-	const { password, ...others } = user._doc;
 
-	createAndSendToken(others, 201, res);
+	createAndSendToken(user, 201, res);
 });
 
 exports.login = catchAsync(async (req, res, next) => {
