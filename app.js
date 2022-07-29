@@ -9,6 +9,7 @@ const cors = require('cors');
 const AppError = require('./utils/AppError');
 const errorMiddleware = require('./utils/errorMiddleware');
 const authRoutes = require('./routes/authRoutes');
+const userRoutes = require('./routes/userRoutes');
 const postRoutes = require('./routes/postRoutes');
 const statisticRoutes = require('./routes/statisticRoutes');
 
@@ -27,6 +28,7 @@ app.use(compression());
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 app.use('/api/v1/auth', authRoutes);
 app.use('/api/v1/posts', postRoutes);
+app.use('/api/v1/users', userRoutes);
 app.use('/api/v1/statistics', statisticRoutes);
 
 app.all('*', (req, res, next) => {

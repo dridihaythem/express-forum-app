@@ -484,6 +484,24 @@ paths:
       security:
         - bearerAuth: []
 
+  /users/{userId}:
+    get:
+      tags:
+        - users
+      summary: get User
+      operationId: users.get
+      parameters:
+        - name: 'userId'
+          in: 'path'
+          description: 'userId'
+          required: true
+          type: 'string'
+      responses:
+        '200':
+          $ref: '#/components/responses/Success'
+        '404':
+          description: 'User not found'
+
 components:
   securitySchemes:
     bearerAuth:
