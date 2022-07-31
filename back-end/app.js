@@ -20,7 +20,7 @@ const app = express();
 app.use(express.static('public'));
 
 app.use(cors());
-app.use(helmet());
+app.use(helmet({ contentSecurityPolicy: false }));
 app.use(express.json({ limit: '10kb' }));
 app.use(mongoSanitize());
 app.use(hpp());
