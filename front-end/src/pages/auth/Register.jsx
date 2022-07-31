@@ -13,7 +13,7 @@ import { Helmet } from 'react-helmet';
 export default function Register() {
 	const navigate = useNavigate();
 	const dispatch = useDispatch();
-	const { loading, errors } = useSelector((state) => state.auth);
+	const { loading } = useSelector((state) => state.auth);
 
 	const [state, setState] = useState({
 		first_name: '',
@@ -25,14 +25,20 @@ export default function Register() {
 		birthday: '',
 	});
 
+	const [errors, setErrors] = useState([]);
+
 	const inputChangeHandler = (e) => {
 		setState({ ...state, [e.target.name]: e.target.value });
 	};
 
 	const submitFormHandler = async (e) => {
 		e.preventDefault();
-		await dispatch(register({ ...state })).unwrap();
-		navigate('/');
+		try {
+			await dispatch(register({ ...state })).unwrap();
+			navigate('/');
+		} catch (e) {
+			setErrors(e);
+		}
 	};
 
 	const cardTitle = (

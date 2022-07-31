@@ -12,12 +12,14 @@ import { Helmet } from 'react-helmet';
 export default function Login() {
 	const navigate = useNavigate();
 	const dispatch = useDispatch();
-	const { loading, errors } = useSelector((state) => state.auth);
+	const { loading } = useSelector((state) => state.auth);
 
 	const [state, setState] = useState({
 		email: '',
 		password: '',
 	});
+
+	const [errors, setErrors] = useState([]);
 
 	const inputChangeHandler = (e) => {
 		setState({ ...state, [e.target.name]: e.target.value });
@@ -25,8 +27,12 @@ export default function Login() {
 
 	const submitFormHandler = async (e) => {
 		e.preventDefault();
-		await dispatch(login({ ...state })).unwrap();
-		navigate('/');
+		try {
+			await dispatch(login({ ...state })).unwrap();
+			navigate('/');
+		} catch (e) {
+			setErrors(e);
+		}
 	};
 
 	const cardTitle = (

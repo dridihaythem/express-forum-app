@@ -51,7 +51,7 @@ export const autoLogin = createAsyncThunk('auth/autologin', async (data, thunkAP
 	}
 });
 
-const initialState = { auth: false, token: null, user: {}, loading: false, errors: [] };
+const initialState = { auth: false, token: null, user: {}, loading: false };
 
 const authSlice = createSlice({
 	name: 'auth',
@@ -73,36 +73,30 @@ const authSlice = createSlice({
 		// Register
 		[register.pending]: (state, action) => {
 			state.loading = true;
-			state.errors = [];
 		},
 		[register.fulfilled]: (state, action) => {
 			state.loading = false;
 			state.auth = true;
 			state.token = action.payload.token;
 			state.user = action.payload.data;
-			state.errors = [];
 			localStorage.setItem('token', action.payload.token);
 		},
 		[register.rejected]: (state, action) => {
 			state.loading = false;
-			state.errors = action.payload;
 		},
 		// Register
 		[login.pending]: (state, action) => {
 			state.loading = true;
-			state.errors = [];
 		},
 		[login.fulfilled]: (state, action) => {
 			state.loading = false;
 			state.auth = true;
 			state.token = action.payload.token;
 			state.user = action.payload.data;
-			state.errors = [];
 			localStorage.setItem('token', action.payload.token);
 		},
 		[login.rejected]: (state, action) => {
 			state.loading = false;
-			state.errors = action.payload;
 		},
 	},
 });
