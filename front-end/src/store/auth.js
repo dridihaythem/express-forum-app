@@ -33,6 +33,24 @@ export const login = createAsyncThunk('auth/login', async (data, thunkAPI) => {
 	}
 });
 
+export const autoLogin = createAsyncThunk('auth/autologin', async (data, thunkAPI) => {
+	const { dispatch } = thunkAPI;
+	const token = localStorage.getItem('token');
+	if (token) {
+		try {
+			const response = await axios({
+				method: 'GET',
+				url: `${process.env.REACT_APP_BACKEND_URL}/auth/me`,
+				headers: { Authorization: `Bearer ${token}` },
+			});
+			console.log(response.data.data);
+			dispatch(authActions.updateUser({ token, user: response.data.data }));
+		} catch (e) {
+			dispatch(authActions.logout());
+		}
+	}
+});
+
 const initialState = { auth: false, token: null, user: {}, loading: false, errors: [] };
 
 const authSlice = createSlice({
@@ -46,6 +64,8 @@ const authSlice = createSlice({
 			localStorage.removeItem('token');
 		},
 		updateUser(state, action) {
+			state.auth = true;
+			state.token = action.payload.token;
 			state.user = action.payload.user;
 		},
 	},
@@ -61,6 +81,7 @@ const authSlice = createSlice({
 			state.token = action.payload.token;
 			state.user = action.payload.data;
 			state.errors = [];
+			localStorage.setItem('token', action.payload.token);
 		},
 		[register.rejected]: (state, action) => {
 			state.loading = false;
@@ -77,6 +98,7 @@ const authSlice = createSlice({
 			state.token = action.payload.token;
 			state.user = action.payload.data;
 			state.errors = [];
+			localStorage.setItem('token', action.payload.token);
 		},
 		[login.rejected]: (state, action) => {
 			state.loading = false;
