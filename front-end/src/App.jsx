@@ -5,6 +5,7 @@ import Navbar from './components/Layout/Navbar';
 import Loading from './components/UI/Loading';
 import Home from './pages/Home';
 
+const Register = React.lazy(() => import('./pages/auth/Register'));
 const PageNotFound = React.lazy(() => import('./pages/PageNotFound'));
 
 export default function App() {
@@ -23,6 +24,7 @@ export default function App() {
 				<Suspense fallback={<Loading />}>
 					<Routes>
 						<Route path='/' element={<Home />}></Route>
+						<Route path='/auth/register' element={<Register />}></Route>
 						<Route path='*' element={<PageNotFound />}></Route>
 					</Routes>
 				</Suspense>
