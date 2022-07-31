@@ -1,0 +1,21 @@
+{
+  "name": "forum",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "install-backend": "cd back-end && npm install",
+    "install-frontend": "cd front-end && npm install",
+    "backend:prod": "cd back-end && npm start",
+    "backend:dev": "cd back-end && npm run dev",
+    "build:frontend": "cd front-end && npm run build",
+    "start" : "npm run backend:prod",
+    "dev" : "npm run backend:dev",
+    "heroku-postbuild": "npm run install-frontend && npm run build:frontend"
+  },
+  "author": "",
+  "license": "ISC",
+  "engines": {
+    "node": ">=16.15.1"
+  }
+}

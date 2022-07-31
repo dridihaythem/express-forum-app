@@ -1,3 +1,4 @@
+const path = require('path');
 const express = require('express');
 const compression = require('compression');
 const mongoSanitize = require('express-mongo-sanitize');
@@ -25,11 +26,17 @@ app.use(mongoSanitize());
 app.use(hpp());
 app.use(compression());
 
+app.use(express.static(path.resolve(__dirname, '../front-end/build')));
+
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 app.use('/api/v1/auth', authRoutes);
 app.use('/api/v1/posts', postRoutes);
 app.use('/api/v1/users', userRoutes);
 app.use('/api/v1/statistics', statisticRoutes);
+
+app.get('*', function (request, response) {
+	response.sendFile(path.resolve(__dirname, '../front-end/build', 'index.html'));
+});
 
 app.all('*', (req, res, next) => {
 	next(new AppError('endpoint not found', 404));
