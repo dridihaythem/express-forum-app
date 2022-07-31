@@ -9,13 +9,17 @@
     "backend:prod": "cd back-end && npm start",
     "backend:dev": "cd back-end && npm run dev",
     "build:frontend": "cd front-end && npm run build",
+    "frontend:dev": "cd front-end && npm run start",
     "start" : "npm run backend:prod",
-    "dev" : "npm run backend:dev",
+    "dev": "concurrently \"npm run frontend:dev\" \"npm run backend:dev\"",
     "heroku-postbuild": "npm run install-backend && npm run install-frontend && npm run build:frontend"
   },
   "author": "",
   "license": "ISC",
   "engines": {
     "node": ">=16.15.1"
+  },
+  "dependencies": {
+    "concurrently": "^7.3.0"
   }
 }
