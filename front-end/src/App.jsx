@@ -6,6 +6,8 @@ import Loading from './components/UI/Loading';
 import Home from './pages/Home';
 
 const Register = React.lazy(() => import('./pages/auth/Register'));
+const Login = React.lazy(() => import('./pages/auth/Login'));
+
 const PageNotFound = React.lazy(() => import('./pages/PageNotFound'));
 
 export default function App() {
@@ -25,6 +27,7 @@ export default function App() {
 					<Routes>
 						<Route path='/' element={<Home />}></Route>
 						<Route path='/auth/register' element={<Register />}></Route>
+						<Route path='/auth/login' element={<Login />}></Route>
 						<Route path='*' element={<PageNotFound />}></Route>
 					</Routes>
 				</Suspense>
