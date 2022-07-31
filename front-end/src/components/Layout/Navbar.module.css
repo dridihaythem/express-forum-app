@@ -1,0 +1,22 @@
+.navbar{
+    background-color: #20232A !important;
+}
+.logo{
+    width: 50px;
+    margin-right: 5px;
+}
+.toggler{
+    border:none
+}
+.toggler:focus {
+    box-shadow: none;
+}
+.link a{
+    color: #f3eeee !important;
+}
+.user-avatar{
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+    margin-right: 5px;
+}
