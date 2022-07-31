@@ -11,7 +11,7 @@
     "build:frontend": "cd front-end && npm run build",
     "start" : "npm run backend:prod",
     "dev" : "npm run backend:dev",
-    "heroku-postbuild": "npm run install-frontend && npm run build:frontend"
+    "heroku-postbuild": "npm run install-backend && npm run install-frontend && npm run build:frontend"
   },
   "author": "",
   "license": "ISC",
