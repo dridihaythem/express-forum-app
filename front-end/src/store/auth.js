@@ -36,14 +36,18 @@ export const login = createAsyncThunk('auth/login', async (data, thunkAPI) => {
 export const autoLogin = createAsyncThunk('auth/autologin', async (data, thunkAPI) => {
 	const { dispatch } = thunkAPI;
 	const token = localStorage.getItem('token');
-	if (token) {
+	const user = localStorage.getItem('user');
+	if (token && user) {
+		// fast login with data from local storage
+		dispatch(authActions.updateUser({ token, user: JSON.parse(user) }));
 		try {
+			// check valid data
 			const response = await axios({
 				method: 'GET',
 				url: `${process.env.REACT_APP_BACKEND_URL}/auth/me`,
 				headers: { Authorization: `Bearer ${token}` },
 			});
-			console.log(response.data.data);
+			// console.log(response.data.data);
 			dispatch(authActions.updateUser({ token, user: response.data.data }));
 		} catch (e) {
 			dispatch(authActions.logout());
@@ -62,6 +66,7 @@ const authSlice = createSlice({
 			state.user = {};
 			state.token = null;
 			localStorage.removeItem('token');
+			localStorage.removeItem('user');
 		},
 		updateUser(state, action) {
 			state.auth = true;
@@ -80,6 +85,7 @@ const authSlice = createSlice({
 			state.token = action.payload.token;
 			state.user = action.payload.data;
 			localStorage.setItem('token', action.payload.token);
+			localStorage.setItem('user', JSON.stringify(action.payload.data));
 		},
 		[register.rejected]: (state, action) => {
 			state.loading = false;
@@ -94,6 +100,7 @@ const authSlice = createSlice({
 			state.token = action.payload.token;
 			state.user = action.payload.data;
 			localStorage.setItem('token', action.payload.token);
+			localStorage.setItem('user', JSON.stringify(action.payload.data));
 		},
 		[login.rejected]: (state, action) => {
 			state.loading = false;
