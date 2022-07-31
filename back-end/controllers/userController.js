@@ -41,7 +41,7 @@ exports.resizeUserPhoto = (req, res, next) => {
 };
 
 exports.getMe = (req, res, next) => {
-	res.json({ status: 'success', user: req.user });
+	res.json({ status: 'success', data: req.user });
 };
 
 exports.updateMe = catchAsync(async (req, res, next) => {
