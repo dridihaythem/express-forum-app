@@ -6,6 +6,7 @@ import Navbar from './components/Layout/Navbar';
 import Loading from './components/UI/Loading';
 import AuthGuard from './guards/AuthGuard';
 import Home from './pages/Home';
+import ShowPost from './pages/posts/ShowPost';
 import { autoLogin } from './store/auth';
 
 const Register = React.lazy(() => import('./pages/auth/Register'));
@@ -47,6 +48,7 @@ export default function App() {
 								</AuthGuard>
 							}
 						></Route>
+						<Route path='/posts/:slug' element={<ShowPost />}></Route>
 						<Route path='*' element={<PageNotFound />}></Route>
 					</Routes>
 				</Suspense>

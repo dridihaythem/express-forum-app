@@ -14,6 +14,19 @@ export const getPosts = createAsyncThunk('posts/getPosts', async (data, thunkAPI
 	}
 });
 
+export const getPost = createAsyncThunk('posts/getPost', async (slug, thunkAPI) => {
+	const { rejectWithValue } = thunkAPI;
+	try {
+		const response = await axios({
+			method: 'GET',
+			url: `${process.env.REACT_APP_BACKEND_URL}/posts/${slug}`,
+		});
+		return response.data.data;
+	} catch (e) {
+		return rejectWithValue(e.response.data.errors);
+	}
+});
+
 const initialState = { loading: true, posts: [] };
 
 const postsSlice = createSlice({
@@ -31,6 +44,15 @@ const postsSlice = createSlice({
 		[getPosts.rejected]: (state, action) => {
 			state.loading = false;
 			state.posts = [];
+		},
+		[getPost.pending]: (state, action) => {
+			state.loading = true;
+		},
+		[getPost.fulfilled]: (state, action) => {
+			state.loading = false;
+		},
+		[getPost.rejected]: (state, action) => {
+			state.loading = false;
 		},
 	},
 });
