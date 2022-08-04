@@ -111,7 +111,7 @@ exports.findByUser = catchAsync(async (req, res, next) => {
 	const user = await User.findById(req.params.userId).populate({
 		path: 'posts',
 		match: { published: true },
-		select: 'slug title content -user',
+		select: 'slug title content -user publishedAt',
 	});
 
 	if (!user) {
