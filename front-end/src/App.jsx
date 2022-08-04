@@ -7,6 +7,7 @@ import Loading from './components/UI/Loading';
 import AuthGuard from './guards/AuthGuard';
 import Home from './pages/Home';
 import ShowPost from './pages/posts/ShowPost';
+import User from './pages/User';
 import { autoLogin } from './store/auth';
 
 const Register = React.lazy(() => import('./pages/auth/Register'));
@@ -49,6 +50,7 @@ export default function App() {
 							}
 						></Route>
 						<Route path='/posts/:slug' element={<ShowPost />}></Route>
+						<Route path='/users/:id' element={<User />}></Route>
 						<Route path='*' element={<PageNotFound />}></Route>
 					</Routes>
 				</Suspense>
