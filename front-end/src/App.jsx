@@ -4,6 +4,7 @@ import { Routes, Route, useLocation } from 'react-router-dom';
 
 import Navbar from './components/Layout/Navbar';
 import Loading from './components/UI/Loading';
+import AdminOrModeratorGuard from './guards/AdminOrModeratorGuard';
 import AuthGuard from './guards/AuthGuard';
 import Home from './pages/Home';
 import ShowPost from './pages/posts/ShowPost';
@@ -14,6 +15,7 @@ const Register = React.lazy(() => import('./pages/auth/Register'));
 const Login = React.lazy(() => import('./pages/auth/Login'));
 
 const CreatePost = React.lazy(() => import('./pages/posts/CreatePost'));
+const Unpublished = React.lazy(() => import('./pages/posts/Unpublished'));
 
 const PageNotFound = React.lazy(() => import('./pages/PageNotFound'));
 
@@ -50,6 +52,14 @@ export default function App() {
 							}
 						></Route>
 						<Route path='/posts/:slug' element={<ShowPost />}></Route>
+						<Route
+							path='/posts/unpublished'
+							element={
+								<AdminOrModeratorGuard>
+									<Unpublished />
+								</AdminOrModeratorGuard>
+							}
+						></Route>
 						<Route path='/users/:id' element={<User />}></Route>
 						<Route path='*' element={<PageNotFound />}></Route>
 					</Routes>
