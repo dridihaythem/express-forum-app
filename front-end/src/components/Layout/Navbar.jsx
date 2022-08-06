@@ -40,6 +40,13 @@ export default React.forwardRef(function (props, ref) {
 								<i className='fa-solid fa-house-user'></i> Home
 							</Link>
 						</li>
+						{auth && ['admin', 'moderator'].includes(user.role) && (
+							<li className={`nav-link ${classes.link}`}>
+								<Link className='nav-link' to='/posts/unpublished'>
+									Unpublished posts
+								</Link>
+							</li>
+						)}
 					</ul>
 					<ul className='navbar-nav ms-auto mb-2 mb-lg-0'>
 						{!auth && (
