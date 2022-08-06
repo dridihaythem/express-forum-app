@@ -1,3 +1,4 @@
+const fs = require('fs');
 const path = require('path');
 const express = require('express');
 const compression = require('compression');
@@ -34,9 +35,12 @@ app.use('/api/v1/posts', postRoutes);
 app.use('/api/v1/users', userRoutes);
 app.use('/api/v1/statistics', statisticRoutes);
 
-app.get('*', function (request, response) {
-	response.sendFile(path.resolve(__dirname, '../front-end/build', 'index.html'));
-});
+const frontEndIndex = path.resolve(__dirname, '../front-end/build', 'index.html');
+if (process.env.NODE_ENV === 'production' && fs.existsSync(frontEndIndex)) {
+	app.get('*', function (request, response) {
+		response.sendFile();
+	});
+}
 
 app.all('*', (req, res, next) => {
 	next(new AppError('endpoint not found', 404));
