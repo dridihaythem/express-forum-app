@@ -1,8 +1,12 @@
 import React from 'react';
+import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { convertDate, convertTime } from '../../utils/Date';
+import PostAction from './PostAction';
 
 export default function Post({ showLess = true, slug, title, content, publishedAt, user }) {
+	const { auth, user: authUser } = useSelector((state) => state.auth);
+
 	return (
 		<div className='card shadow mb-3'>
 			<div className='card-header'>{title}</div>
@@ -23,6 +27,8 @@ export default function Post({ showLess = true, slug, title, content, publishedA
 					{convertDate(publishedAt, { year: 'numeric', month: 'long', day: 'numeric' })} {convertTime(publishedAt)}
 				</span>
 			</div>
+
+			{auth && ['admin', 'moderator'].includes(authUser.role) && <PostAction slug={slug} />}
 		</div>
 	);
 }
